@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
+  <title>WebXR AR — MeasureUp demo</title>
+  <style>
+    html,body{height:100%;margin:0;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+    #overlay{position:fixed;left:10px;top:10px;z-index:10}
+    button{padding:8px 12px;margin:4px;border-radius:6px;border:1px solid #222;background:#fff}
+    #message{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:rgba(0,0,0,0.6);color:#fff;padding:8px 12px;border-radius:6px}
+    canvas{display:block}
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <button id="btn-add-cube">Añadir cubo</button>
+    <button id="btn-add-sphere">Añadir esfera</button>
+    <button id="btn-clear">Limpiar</button>
+  </div>
+  <div id="message">Apunta a una superficie y pulsa Añadir cubo / esfera.</div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
