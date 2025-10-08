@@ -16,13 +16,13 @@
     /* 🔹 Overlay fijo arriba del canvas */
     #overlay {
       position: fixed;
-      top: 100px;
+      top: 10px;
       left: 10px;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255,255,255,0.85);
       padding: 8px;
       border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
 
     button {
@@ -39,13 +39,13 @@
       background: #eee;
     }
 
-    /* 🔹 Mensaje de ayuda en la parte inferior */
+    /* 🔹 Mensaje de ayuda */
     #message {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
       bottom: 20px;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0,0,0,0.6);
       color: #fff;
       padding: 8px 12px;
       border-radius: 6px;
@@ -59,17 +59,16 @@
   </style>
 </head>
 <body>
-  <!-- 🔹 Overlay con botones -->
+  <!-- 🔹 Overlay UI -->
   <div id="overlay">
     <button id="btn-add-cube">Añadir cubo</button>
     <button id="btn-add-sphere">Añadir esfera</button>
     <button id="btn-clear">Limpiar</button>
   </div>
 
-  <!-- 🔹 Mensaje inferior -->
-  <div id="message">Apunta a una superficie y pulsa un botón para añadir un objeto.</div>
+  <!-- 🔹 Mensaje -->
+  <div id="message">Apunta a una superficie y pulsa un botón.</div>
 
-  <!-- 🔹 Script principal -->
   <script type="module" src="app.js"></script>
 </body>
 </html>

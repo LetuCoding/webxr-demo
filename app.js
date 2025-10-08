@@ -1,4 +1,4 @@
-// app.js — Demo WebXR AR con cubos y esferas
+// app.js — WebXR AR con domOverlay habilitado
 import * as THREE from 'https://unpkg.com/three@0.156.0/build/three.module.js';
 import { ARButton } from 'https://unpkg.com/three@0.156.0/examples/jsm/webxr/ARButton.js';
 
@@ -6,7 +6,6 @@ let camera, scene, renderer;
 let reticle, controller;
 let placed = [];
 
-// Inicialización
 init();
 
 function init() {
@@ -22,7 +21,7 @@ function init() {
   const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
   scene.add(light);
 
-  // Retícula para el hit test
+  // Retícula
   reticle = new THREE.Mesh(
     new THREE.RingGeometry(0.08, 0.12, 32).rotateX(-Math.PI / 2),
     new THREE.MeshBasicMaterial({ color: 0x00ffff })
@@ -31,25 +30,27 @@ function init() {
   reticle.visible = false;
   scene.add(reticle);
 
-  // Controlador XR
+  // Controlador
   controller = renderer.xr.getController(0);
   controller.addEventListener('select', onSelect);
   scene.add(controller);
 
-  // 🔹 Botón de entrada a AR
-  const arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-  arButton.style.zIndex = '99';
+  // 🔹 Botón de entrada a AR (con domOverlay)
+  const arButton = ARButton.createButton(renderer, {
+    requiredFeatures: ['hit-test', 'dom-overlay'],
+    domOverlay: { root: document.body } // 👈 esto mantiene visible el HTML
+  });
   document.body.appendChild(arButton);
 
-  // 🔹 Botones de interfaz
+  // 🔹 Eventos de botones
   document.getElementById('btn-add-cube').addEventListener('click', () => spawn('cube'));
   document.getElementById('btn-add-sphere').addEventListener('click', () => spawn('sphere'));
   document.getElementById('btn-clear').addEventListener('click', clearScene);
 
-  // 🔹 Ajuste de tamaño
+  // 🔹 Resize
   window.addEventListener('resize', onWindowResize);
 
-  // 🔹 Bucle de renderizado
+  // 🔹 Render loop
   renderer.setAnimationLoop(render);
 }
 
@@ -57,7 +58,6 @@ function init() {
 let xrHitTestSource = null;
 let xrRefSpace = null;
 
-// 🔹 Configuración del hit-test
 renderer.xr.addEventListener('sessionstart', async () => {
   const session = renderer.xr.getSession();
   xrRefSpace = await session.requestReferenceSpace('viewer');
@@ -69,7 +69,7 @@ renderer.xr.addEventListener('sessionstart', async () => {
   });
 });
 
-// 🔹 Crear un objeto
+// Crear objeto
 function spawn(type) {
   if (!reticle.visible) {
     showMessage('Busca una superficie válida primero.');
@@ -89,7 +89,6 @@ function spawn(type) {
     mesh = new THREE.Mesh(new THREE.SphereGeometry(0.08, 32, 32), material);
   }
 
-  // Posición basada en la retícula
   mesh.position.setFromMatrixPosition(reticle.matrix);
   mesh.quaternion.setFromRotationMatrix(reticle.matrix);
 
@@ -97,14 +96,14 @@ function spawn(type) {
   placed.push(mesh);
 }
 
-// 🔹 Limpiar la escena
+// Limpiar escena
 function clearScene() {
   placed.forEach(o => scene.remove(o));
   placed = [];
   showMessage('Escena limpiada.');
 }
 
-// 🔹 Interacción con objetos
+// Interacción
 function onSelect() {
   if (placed.length === 0) return;
   let nearest = null;
@@ -113,10 +112,7 @@ function onSelect() {
 
   placed.forEach(o => {
     const d = camPos.distanceTo(o.position);
-    if (d < nd) {
-      nd = d;
-      nearest = o;
-    }
+    if (d < nd) { nd = d; nearest = o; }
   });
 
   if (nearest) {
@@ -124,7 +120,7 @@ function onSelect() {
   }
 }
 
-// 🔹 Mostrar mensaje en pantalla
+// Mensajes
 function showMessage(txt) {
   const m = document.getElementById('message');
   m.textContent = txt;
@@ -132,12 +128,12 @@ function showMessage(txt) {
   setTimeout(() => (m.style.opacity = '0.9'), 1200);
 }
 
-// 🔹 Ajuste de ventana
+// Resize
 function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// 🔹 Render loop con hit-test
+// Render loop
 function render(timestamp, frame) {
   if (frame) {
     const session = renderer.xr.getSession();
